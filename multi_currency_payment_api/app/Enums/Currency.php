@@ -168,9 +168,8 @@ enum Currency: string
     case ZWL = 'ZWL';
 
     public static function values(): array
-    {   
-         
-        dd(array_map(fn(self $role) => $role->value, self::cases()));
+    {          
+        return array_map(fn(self $role) => $role->value, self::cases());
     }
 
     
