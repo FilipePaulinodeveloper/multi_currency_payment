@@ -2,6 +2,7 @@
 
 namespace App\Integrations\ExchangeRate;
 
+use App\Enums\Currency;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
@@ -12,8 +13,8 @@ class ExchangeRateAdapter
     
     public function __construct()
     {        
-        $this->apiKey = config('services.exchange_rate.api_key');
-        $this->baseUrl = config('services.exchange_rate.base_url', 'https://v6.exchangerate-api.com/v6');
+        $this->apiKey = env('EXCHANGE_RATE_API_KEY');
+        $this->baseUrl = 'https://v6.exchangerate-api.com/v6/' . $this->apiKey . '/latest';
         
         if (!$this->apiKey) {
             throw new Exception('Exchange Rate API key not configured', 500);
@@ -22,25 +23,43 @@ class ExchangeRateAdapter
 
     public function getRates(string $baseCurrency): array
     {
-        $response = Http::get("{$this->baseUrl}/{$baseCurrency}");
+        //Http::withoutVerifying() ONLY FOR TESTING PURPOSES, MAKE SURE TO REMOVE IT IN PRODUCTION AND USE A VALID SSL CERTIFICATE
+        $response = Http::withoutVerifying()->get("{$this->baseUrl}/{$baseCurrency}");
         
         if ($response->failed()) {
-            throw new \Exception("Error to get exchange rates: " . $response->body());
+            
+            abort($response->status(), "Error to get exchange rates: " . $response->body());
+            // throw new \Exception("Error to get exchange rates: " . $response->body());      
+
         }   
 
         return $response->json();
     }
 
-    public function convert(string $from, string $to, float $amount): float
+    private function validateCurrency(string $currency)
     {
-        $data = $this->getRates($from);
+        if (!Currency::tryFrom($currency)) {
+        // //   throw new \Exception("Currency '{$currency}' is not supported", 422);
+            abort(422, "Currency '{$currency}' is not supported");
+        }
+    }
 
-        $rate = $data['conversion_rates'][$to] ?? null;
-
-        if (!$rate) {
-            throw new \Exception("Currency {$to} not found");
+    public function convert(string $from, float $amount, string $to = 'EUR'): float
+    {
+        if ($amount <= 0) {
+          return 0.00;
+        }
+        else if ($from === $to) {
+            return round($amount, 2);
         }
 
-        return $amount * $rate;
+        $this->validateCurrency($from);
+        $this->validateCurrency($to);
+        $data = $this->getRates($from);
+
+        $rate = $data['conversion_rates'][$to] ;  
+
+
+        return round($amount * $rate, 2);
     }
 }
