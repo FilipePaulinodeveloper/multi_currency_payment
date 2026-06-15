@@ -17,24 +17,19 @@ abstract class BaseSimpleCRUDService
 
     public function __construct(Model $model)
     {
-        $this->model = $model;
-        $this->cacheKey = class_basename($model) . '_index_cache';
+        $this->model = $model;       
     }
 
-    public function index()
-    {
-        
-        return Cache::rememberForever($this->cacheKey, function () {
-            return $this->model->paginate(15);
-        });
-       
+    public function index(?array $filters = null)
+    {                           
+        return $this->model->paginate(15);              
     }
 
     public function store(array $data)
     { 
 
-        $data = $this->model->create($data);            
-        Cache::forget($this->cacheKey);
+        $data = $this->model->create($data);          
+        
         return $data;  
 
     }
@@ -45,11 +40,11 @@ abstract class BaseSimpleCRUDService
     }
 
     public function update(string $id, array $data)
-    {        
+    {       
         
         $record = $this->model->findOrFail($id);                  
-        $record->update($data);
-        Cache::forget($this->cacheKey);
+        $record->update($data);    
+            
         return $record;
          
     }
@@ -57,7 +52,7 @@ abstract class BaseSimpleCRUDService
     public function destroy(string $id)
     {       
         $record = $this->model->findOrFail($id);          
-        $record->delete();            
-        Cache::forget($this->cacheKey);     
+        $record->delete();          
+         
     }
 }

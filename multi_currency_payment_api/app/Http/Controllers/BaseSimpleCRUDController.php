@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Traits\ErrorHandlerTrait;
-
+use Illuminate\Http\Request;
 
 Abstract class BaseSimpleCRUDController extends Controller
 {
@@ -62,9 +62,9 @@ Abstract class BaseSimpleCRUDController extends Controller
         return "{$controllerName} {$actionText}";
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $dados = $this->service->index();
+        $dados = $this->service->index($request->all());
         return response()->json([            
             'data' => $dados
         ], 200);
