@@ -44,22 +44,29 @@ class ExchangeRateAdapter
         }
     }
 
-    public function convert(string $from, float $amount, string $to = 'EUR'): float
+    public function convert(string $from, float $amount, string $to = 'EUR'): Array
     {
-        if ($amount <= 0) {
-          return 0.00;
-        }
-        else if ($from === $to) {
-            return round($amount, 2);
-        }
+      
 
         $this->validateCurrency($from);
         $this->validateCurrency($to);
-        $data = $this->getRates($from);
+        
+        $date = $this->getRates($from);
 
-        $rate = $data['conversion_rates'][$to] ;  
+        if ($amount <= 0) {
+            abort(422, "Amount must be greater than zero");
+        }
+
+         if ($from === $to) {
+            return ['amount' => round($amount, 2), 'exchange_rate' => 1.00];
+        }
+        
+        $rate = $date['conversion_rates'][$to] ;  
 
 
-        return round($amount * $rate, 2);
+        return [
+            'amount' => round($amount * $rate, 2),
+            'exchange_rate' => $rate
+        ];
     }
 }

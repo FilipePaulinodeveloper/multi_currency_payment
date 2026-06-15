@@ -58,4 +58,13 @@ class User extends Authenticatable
             'currency' => Currency::class,
         ];
     }
+
+        /**
+        * Get the payment requests created by this user
+        */
+
+    public function paymentRequests()
+    {
+        return $this->hasMany(PaymentRequest::class);
+    }
 }

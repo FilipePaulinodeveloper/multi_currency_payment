@@ -10,8 +10,7 @@ class CurrencyService
     ) {}
 
     public function convert(string $from, float $amount, string $to = 'EUR'): array
-    {
-        
+    {       
        
 
         $converted = $this->adapter->convert($from, $amount, $to);
@@ -19,8 +18,9 @@ class CurrencyService
         return [
             'from' => $from,
             'to' => $to,
+            'exchange_rate' => $converted['exchange_rate'],
             'amount' => $amount,
-            'converted' => $converted,
+            'converted' => $converted['amount'],
         ];
     }
 }
