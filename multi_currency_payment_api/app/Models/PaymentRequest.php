@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\PaymentRequestStatus;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,10 +49,14 @@ class PaymentRequest extends Model
     /**
      * Scope to get pending requests
      */
-    public function scopePending($query)
+    public function scopeStatus($query, PaymentRequestStatus $status)
     {
-        return $query->where('status', PaymentRequestStatus::PENDING);
+        return $query->where('status', $status instanceof PaymentRequestStatus
+            ? $status->value
+            : $status
+        );
     }
+ 
 
     /**
      * Scope to get approved requests
@@ -60,28 +66,25 @@ class PaymentRequest extends Model
         return $query->where('status', PaymentRequestStatus::APPROVED);
     }
 
-    /**
-     * Approve the payment request
-     */
-    public function approve(): bool
-    {      
+    // /**
+    //  * Approve the payment request
+    //  */
+    // public function approve(): bool
+    // {      
 
-        return $this->update(['status' => PaymentRequestStatus::APPROVED]);
+    //     return $this->update(['status' => PaymentRequestStatus::APPROVED]);
+    // }
+
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where('status', PaymentRequestStatus::PENDING);
+    }
+    
+    public function scopeOlderThan(Builder $query, $limite): Builder
+    {
+        return $query->where('created_at', '<=', $limite);
     }
 
-    /**
-     * Reject the payment request
-     */
-    public function reject(): bool
-    {     
-        return $this->update(['status' => PaymentRequestStatus::REJECTED]);
-    }
-
-    /**
-     * Mark as expired
-     */
-    public function markExpired(): bool
-    {        
-        return $this->update(['status' => PaymentRequestStatus::EXPIRED]);
-    }
+  
+   
 }

@@ -6,7 +6,7 @@ enum PaymentRequestStatus: string
 {
     case PENDING = 'pending';
     case APPROVED = 'approved';
-    case REJECTED = 'rejected';
+    case REJECTED = 'rejected';    
     case EXPIRED = 'expired';
 
     /**
@@ -25,7 +25,8 @@ enum PaymentRequestStatus: string
         return match($this) {
             self::PENDING => 'Pending',
             self::APPROVED => 'Approved',
-            self::REJECTED => 'Rejected',            
+            self::REJECTED => 'Rejected',      
+            self::EXPIRED => 'Expired',      
         };
     }
 

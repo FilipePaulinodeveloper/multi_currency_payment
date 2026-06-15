@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(PaymentRequest::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::FINANCE_ADMIN;
+    }
+
+    public function isEmployee(): bool
+    {
+        return $this->role === Role::EMPLOYEE;
+    }
 }
