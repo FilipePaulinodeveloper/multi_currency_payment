@@ -10,10 +10,9 @@ class AuthService
     public function login(array $credentials): array
     {
         
-        if (!Auth::attempt($credentials)) {
-        
-            throw new Exception('Invalid credentials');
-        }
+       if (!Auth::attempt($credentials)) {
+            abort(401, 'Email or password is incorrect. Please verify and try again.');
+       }
         
 
         $user = Auth::user();

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PaymentRequestStatus;
+use App\Enums\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -83,6 +84,15 @@ class PaymentRequest extends Model
     public function scopeOlderThan(Builder $query, $limite): Builder
     {
         return $query->where('created_at', '<=', $limite);
+    }
+
+    public function scopeVisibleTo($query)
+    {
+        $user = auth()->user();
+        
+        if (!($user->role == Role::FINANCE_ADMIN)) {
+            $query->where('user_id', $user->id);
+        }
     }
 
   

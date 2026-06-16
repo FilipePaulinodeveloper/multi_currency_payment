@@ -13,9 +13,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {   
     Route::resource('user', UserController::class);
     
-    Route::get('/exchange-rate/{base}/amount/{amount}', function ($base, $amount, CurrencyService $service) {
-        return $service->convert($base, $amount);       
-    });
+    // Route::get('/exchange-rate/{base}/amount/{amount}', function ($base, $amount, CurrencyService $service) {
+    //     return $service->convert($base, $amount);       
+    // });
     Route::resource('payment-requests', PaymentRequestController::class)->only(['store', 'index', 'show', 'destroy']);
     Route::put('/payment-requests/{id}/status', [PaymentRequestController::class, 'updateStatus']);
     // Route::post('/payment-requests/{id}/approve', [PaymentRequestController::class, 'approve']);

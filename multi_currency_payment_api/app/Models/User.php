@@ -76,5 +76,5 @@ class User extends Authenticatable
     public function isEmployee(): bool
     {
         return $this->role === Role::EMPLOYEE;
-    }
+    } 
 }
