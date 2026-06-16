@@ -5,6 +5,7 @@ namespace App\Integrations\ExchangeRate;
 use App\Enums\Currency;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
 
 class ExchangeRateAdapter
 {
@@ -40,19 +41,21 @@ class ExchangeRateAdapter
     {
         if (!Currency::tryFrom($currency)) {
         // //   throw new \Exception("Currency '{$currency}' is not supported", 422);
-            abort(422, "Currency '{$currency}' is not supported");
+            throw ValidationException::withMessages([
+                'currency' => "Currency '{$currency}' is not supported"
+            ]);
         }
     }
 
     public function convert(string $from, float $amount, string $to = 'EUR'): Array
     {
       
-
+        
         $this->validateCurrency($from);
         $this->validateCurrency($to);
         
         $date = $this->getRates($from);
-
+        
         if ($amount <= 0) {
             abort(422, "Amount must be greater than zero");
         }

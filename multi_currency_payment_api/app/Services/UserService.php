@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;    
+use App\Models\User;
+use Override;
 
 class UserService extends BaseSimpleCRUDService
 {
@@ -10,5 +11,10 @@ class UserService extends BaseSimpleCRUDService
     {
         
         parent::__construct($model);
+    }
+    
+    public function listEmployees(?array $filters = null)
+    {
+        
     }
 }

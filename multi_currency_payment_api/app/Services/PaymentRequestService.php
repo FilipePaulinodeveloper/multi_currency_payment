@@ -12,9 +12,15 @@ use Override;
 
 class PaymentRequestService extends BaseSimpleCRUDService
 {
-    public function __construct(PaymentRequest $model)
-    {
-        
+    // protected  CurrencyService $currencyService;
+    private CurrencyService $currencyService;
+
+    public function __construct(
+        PaymentRequest $model,
+        CurrencyService $currencyService
+    ) {
+        $this->currencyService = $currencyService;
+
         parent::__construct($model);
     }
 
@@ -32,9 +38,12 @@ class PaymentRequestService extends BaseSimpleCRUDService
                 ]);
             }
         }
+        
+        
 
         $query = $this->model->query();
-
+        $query = $this->model->VisibleTo($query);
+        
         if (isset($status)) {
             $query->status($status);
         }
@@ -73,8 +82,9 @@ class PaymentRequestService extends BaseSimpleCRUDService
 
     private function calculateCurrencyConversion(array $data): array
     {
-        $currencyService = new CurrencyService(new ExchangeRateAdapter());
-        return $currencyService->convert($data['currency'], $data['amount_local']);
+        // $currencyService = new CurrencyService(new ExchangeRateAdapter());
+        
+        return $this->currencyService->convert($data['currency'], $data['amount_local']);
     }
 
     
