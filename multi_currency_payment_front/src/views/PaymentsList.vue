@@ -9,6 +9,8 @@ const user = ref(
 )
 
 
+
+
 const isFinancialAdmin = computed(() =>
 //   console.log(user.value)
   user.value?.role?.includes('finance_admin')
@@ -64,6 +66,14 @@ const search     = ref('')
 const statusFilter = ref('')
 const toast      = useToast()
 
+
+watch(
+  () => meta.value.current_page,
+  (page) => {    
+
+    fetchPayments(page)
+  }
+)
 // Modal
 const modalOpen  = ref(false)
 const saving     = ref(false)
@@ -117,6 +127,7 @@ async function deletePayment(id: number) {
 
 // ── Fetch ──────────────────────────────────────────────────────────────────
 async function fetchPayments(page = 1) {
+  console.log(page)
   loading.value = true
   try {
     const { data } = await api.get('/payment-requests', {
@@ -174,8 +185,9 @@ async function savePayment() {
     return
   }
   saving.value = true
-  try {
-    await api.post('/payment-request', {
+  try {    
+    
+    await api.post('/payment-requests', {
       description:  form.value.description,
       amount_local: Number(form.value.amount_local),
       currency:     form.value.currency,
@@ -184,6 +196,7 @@ async function savePayment() {
     modalOpen.value = false
     fetchPayments(1)
   } catch (e: any) {
+    console.log(e)
     if (e.response?.status === 422) {
       const be = e.response.data.errors
       for (const f in be) errors.value[f] = be[f][0]
@@ -378,8 +391,9 @@ onMounted(fetchPayments)
       <span class="text-xs text-zinc-600">
         Page {{ meta.current_page }} of {{ meta.last_page }}
       </span>
+      {{meta.current_page}}
       <UPagination
-        :model-value="meta.current_page"
+        v-model:page="meta.current_page"
         :page-count="meta.per_page"
         :total="meta.total"
         :ui="{
@@ -389,8 +403,10 @@ onMounted(fetchPayments)
             active: 'bg-emerald-500 text-zinc-950 border-emerald-500 font-semibold',
           },
         }"
-        @update:model-value="fetchPayments"
+        @update:page="fetchPayments"
       />
+
+  
     </div>
   </div>
 
