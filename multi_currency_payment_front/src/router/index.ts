@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from '../views/login.vue'
 import Default from '../layouts/default.vue'
 import HomeTable from '../views/index.vue'
-import EmployeesList from '../views/EmployeesList.vue'
+
 import PaymentsList from '../views/PaymentsList.vue'
 
 const router = createRouter({
