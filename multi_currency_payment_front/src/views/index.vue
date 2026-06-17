@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HomeTable from './homeTable.vue';
+import HomeTable from './HomeTable.vue';
 
 // This page uses the default layout (sidebar) automatically
 
