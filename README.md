@@ -86,7 +86,7 @@ php artisan migrate --seed
 ```bash
 php artisan serve
 ```
-### 8. Instruções para uso da api esta no arquivo  dentro de multi_currency_payment_api\
+### 8. Instruções para uso da api esta no arquivo 
 ```bash
     cd docs
 ```
