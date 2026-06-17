@@ -43,6 +43,12 @@ npm run dev
 
 Após executar o comando acima, a aplicação estará disponível no navegador no endereço informado pelo terminal (geralmente `http://localhost:3000` ou `http://localhost:5173`).
 
+O Front-end estará disponível em:
+
+```text
+ https://multicurrencypayment-production.up.railway.app/api](https://artistic-insight-production-ad50.up.railway.app/login
+```
+
 ## Configuração do Backend
 
 1. Acesse os arquivos do Back-end
@@ -94,7 +100,7 @@ php artisan serve
 O backend estará disponível em:
 
 ```text
-http://localhost:8000
+https://multicurrencypayment-production.up.railway.app/api
 ```
 
 ## Scheduler
