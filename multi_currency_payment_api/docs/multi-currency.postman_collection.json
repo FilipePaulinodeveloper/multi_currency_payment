@@ -447,28 +447,7 @@
           "response": []
         }
       ]
-    },
-    {
-      "name": "exchange_rate_api",
-      "item": [
-        {
-          "name": "New Request",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "New Request",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        }
-      ]
-    }
+    },    
   ],
   "event": [
     {
